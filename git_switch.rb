@@ -19,7 +19,7 @@ class GitSwitch < Struct.new(:branch)
     end
 
     def handle_pull_request_url
-      fork? ? pull_branch_with_fork_prefix : handle_source
+      fork? ? pull_branch_with_fork_prefix : handle_source_branch
     end
 
     def fork?
@@ -36,6 +36,12 @@ class GitSwitch < Struct.new(:branch)
 
     def origin_url
       `git config --get remote.origin.url`
+    end
+
+    def handle_source_branch
+      pull_branch_with_fork_prefix &&
+      handle_branch_name           &&
+      delete_branch_with_fork_prefix
     end
 
     def handle_branch_name

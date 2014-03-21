@@ -9,14 +9,25 @@ class GitSwitch < Struct.new(:branch)
   end
 
   def call
-    if branch_exists_locally?
-      checkout_local_branch && pull_from_origin
-    else
-      fetch_from_origin && checkout_and_track_branch
-    end
+    url? ? handle_pull_request_url : handle_branch_name
   end
 
   private
+
+    def url?
+      branch.match /https:\/\/github.com\//
+    end
+
+    def handle_pull_request_url
+    end
+
+    def handle_branch_name
+      if branch_exists_locally?
+        checkout_local_branch && pull_from_origin
+      else
+        fetch_from_origin && checkout_and_track_branch
+      end
+    end
 
     def branch_exists_locally?
       return true unless `git show-ref refs/heads/#{branch}`.empty?

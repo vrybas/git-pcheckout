@@ -19,14 +19,14 @@ class GitSwitch < Struct.new(:branch)
     end
 
     def handle_pull_request_url
-      fork? ? create_branch_with_fork_prefix : handle_source
+      fork? ? pull_branch_with_fork_prefix : handle_source
     end
 
     def fork?
       !(user_name(branch) == user_name(origin_url))
     end
 
-    def create_branch_with_fork_prefix
+    def pull_branch_with_fork_prefix
       return true if system("hub checkout #{branch}")
     end
 

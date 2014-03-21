@@ -9,7 +9,7 @@ class GitSwitch < Struct.new(:branch)
   end
 
   def call
-    url? ? handle_pull_request_url : handle_branch_name
+    url? ? handle_pull_request_url : handle_branch
   end
 
   private
@@ -40,11 +40,11 @@ class GitSwitch < Struct.new(:branch)
 
     def handle_source_branch
       pull_branch_with_fork_prefix &&
-      handle_branch_name           &&
+      handle_branch           &&
       delete_branch_with_fork_prefix
     end
 
-    def handle_branch_name
+    def handle_branch
       if branch_exists_locally?
         checkout_local_branch && pull_from_origin
       else

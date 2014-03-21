@@ -54,8 +54,14 @@ describe GitSwitch do
       end
 
       context "fork" do
+        it "should detect a fork" do
+          origin_url = "https://github.com/forked_user/repo.git"
+          expect_any_instance_of(GitSwitch).to receive("origin_url").and_return(origin_url)
+          expect_any_instance_of(GitSwitch).to receive("handle_fork").and_return(true)
+          GitSwitch.("https://github.com/user/repo.git")
+        end
+
         xit "should create a fork branch with prefix" do
-          expect_any_instance_of(GitSwitch).to receive("url?").and_return(true)
           GitSwitch.("https://github.com/user/repo.git")
         end
       end

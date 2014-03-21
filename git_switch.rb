@@ -19,6 +19,19 @@ class GitSwitch < Struct.new(:branch)
     end
 
     def handle_pull_request_url
+      fork? ? handle_fork : handle_source
+    end
+
+    def fork?
+      !(user_name(branch) == user_name(origin_url))
+    end
+
+    def user_name(url)
+      url.scan(/([\w\-_]+\/\w+).git/).flatten.first.split("/").first
+    end
+
+    def origin_url
+      `git config --get remote.origin.url`
     end
 
     def handle_branch_name

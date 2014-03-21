@@ -1,3 +1,5 @@
+require_relative 'lib/handle_branch.rb'
+
 class GitSwitch < Struct.new(:branch)
 
   def self.call(*args)
@@ -9,7 +11,7 @@ class GitSwitch < Struct.new(:branch)
   end
 
   def call
-    url? ? handle_pull_request_url : handle_branch
+    url? ? handle_pull_request_url : handle_branch(branch)
   end
 
   private
@@ -30,6 +32,10 @@ class GitSwitch < Struct.new(:branch)
       return true if system("hub checkout #{branch}")
     end
 
+    def pull_branch
+      true
+    end
+
     def user_name(url)
       url.scan(/([\w\-_]+\/\w+).git/).flatten.first.split("/").first
     end
@@ -40,35 +46,11 @@ class GitSwitch < Struct.new(:branch)
 
     def handle_source_branch
       pull_branch_with_fork_prefix &&
-      handle_branch                &&
+      handle_branch(pull_branch)   &&
       delete_branch_with_fork_prefix
     end
 
-    def handle_branch
-      if branch_exists_locally?
-        checkout_local_branch && pull_from_origin
-      else
-        fetch_from_origin && checkout_and_track_branch
-      end
-    end
-
-    def branch_exists_locally?
-      return true unless `git show-ref refs/heads/#{branch}`.empty?
-    end
-
-    def checkout_local_branch
-      system "git checkout #{branch}"
-    end
-
-    def pull_from_origin
-      system "git pull origin #{branch}"
-    end
-
-    def fetch_from_origin
-      system "git fetch origin"
-    end
-
-    def checkout_and_track_branch
-      system "git checkout --track origin/#{branch}"
+    def handle_branch(branch)
+      HandleBranch.(branch)
     end
 end

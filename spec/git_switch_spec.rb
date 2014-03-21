@@ -31,7 +31,12 @@ describe GitSwitch do
         GitSwitch.("foo")
       end
 
-      it "should fetch and checkout with track if branch not exist"
+      it "should fetch and checkout with track if branch not exist" do
+        expect_any_instance_of(GitSwitch).to receive("branch_exists_locally?").and_return(false)
+        expect_any_instance_of(GitSwitch).to receive("fetch_from_origin").and_return(true)
+        expect_any_instance_of(GitSwitch).to receive("checkout_and_track_branch").and_return(true)
+        GitSwitch.("foo")
+      end
     end
 
     context "pull request url" do

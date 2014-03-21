@@ -11,6 +11,8 @@ class GitSwitch < Struct.new(:branch)
   def call
     if branch_exists_locally?
       checkout_local_branch && pull_from_origin
+    else
+      fetch_from_origin && checkout_and_track_branch
     end
   end
 
@@ -26,5 +28,13 @@ class GitSwitch < Struct.new(:branch)
 
     def pull_from_origin
       system "git pull origin #{branch}"
+    end
+
+    def fetch_from_origin
+      system "git fetch origin"
+    end
+
+    def checkout_and_track_branch
+      system "git checkout --track origin/#{branch}"
     end
 end

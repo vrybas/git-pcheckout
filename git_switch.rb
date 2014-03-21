@@ -29,11 +29,13 @@ class GitSwitch < Struct.new(:branch)
     end
 
     def pull_branch_with_fork_prefix
-      return true if system("hub checkout #{branch}")
+      out = `system("hub checkout #{branch}")`
+      return false if out == ''
+      branch_name_with_fork_prefix = out.scan(/Branch (.+) set/).flatten
     end
 
-    def pull_branch
-      true
+    def substitute_fork_prefix(branch_name)
+      branch_name.gsub("#{user_name(branch)}-",'')
     end
 
     def user_name(url)
@@ -45,9 +47,14 @@ class GitSwitch < Struct.new(:branch)
     end
 
     def handle_source_branch
-      pull_branch_with_fork_prefix &&
-      handle_branch(pull_branch)   &&
-      delete_branch_with_fork_prefix
+      if branch_name = pull_branch_with_fork_prefix
+        handle_branch(substitute_fork_prefix(branch_name)) &&
+        delete_branch(branch_name)
+      end
+    end
+
+    def delete_branch(branch_name)
+      system("git branch -D #{branch_name}")
     end
 
     def handle_branch(branch)

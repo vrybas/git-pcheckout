@@ -42,7 +42,7 @@ describe GitSwitch do
         it "should pull a fork branch with prefix" do
           origin_url = "https://github.com/forked_user/repo.git"
           expect_any_instance_of(GitSwitch).to receive("origin_url").and_return(origin_url)
-          expect_any_instance_of(GitSwitch).to receive("pull_branch_with_fork_prefix").and_return(true)
+          expect_any_instance_of(GitSwitch).to receive("pull_branch_with_fork_prefix").and_return("forked-user-branch_name")
           GitSwitch.("https://github.com/user/repo.git")
         end
       end
@@ -51,9 +51,9 @@ describe GitSwitch do
         it "should handle a source branch, specified in pull request" do
           origin_url = "https://github.com/user/repo.git"
           expect_any_instance_of(GitSwitch).to receive("origin_url").and_return(origin_url)
-          expect_any_instance_of(GitSwitch).to receive("pull_branch_with_fork_prefix").and_return(true)
+          expect_any_instance_of(GitSwitch).to receive("pull_branch_with_fork_prefix").and_return("user-branch_name")
           expect_any_instance_of(HandleBranch).to receive("call").and_return(true)
-          expect_any_instance_of(GitSwitch).to receive("delete_branch_with_fork_prefix").and_return(true)
+          expect_any_instance_of(GitSwitch).to receive("delete_branch").and_return(true)
           GitSwitch.("https://github.com/user/repo.git")
         end
       end

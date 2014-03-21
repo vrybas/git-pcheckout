@@ -3,7 +3,11 @@ require_relative '../git_switch.rb'
 describe GitSwitch do
 
   context ".call" do
-    it "should delegate to #new() with all params"
+    it "should delegate to #new() with all params" do
+      instance = GitSwitch.("foo")
+      expect(instance).to be
+    end
+
     it "should send #call() to created instance"
   end
 

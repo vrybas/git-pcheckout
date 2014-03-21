@@ -8,7 +8,10 @@ describe GitSwitch do
       expect(instance).to be
     end
 
-    it "should send #call() to created instance"
+    it "should send #call() to created instance" do
+      expect_any_instance_of(GitSwitch).to receive("call")
+      GitSwitch.("foo")
+    end
   end
 
   context "#call" do

@@ -14,6 +14,13 @@ describe GitSwitch do
     end
   end
 
+  context "#initialize" do
+    it "should set @branch" do
+      instance = GitSwitch.("foo")
+      expect(instance.branch).to eql("foo")
+    end
+  end
+
   context "#call" do
     context "plain branch name" do
       it "should checkout and pull if branch exists"

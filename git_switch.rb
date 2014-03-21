@@ -40,7 +40,7 @@ class GitSwitch < Struct.new(:branch)
 
     def handle_source_branch
       pull_branch_with_fork_prefix &&
-      handle_branch           &&
+      handle_branch                &&
       delete_branch_with_fork_prefix
     end
 

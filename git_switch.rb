@@ -17,6 +17,7 @@ class GitSwitch < Struct.new(:branch)
   private
 
     def url?
+      puts "handling Pull Request URL..."
       branch.match /https:\/\/github.com\//
     end
 
@@ -31,6 +32,7 @@ class GitSwitch < Struct.new(:branch)
     end
 
     def pull_branch_with_fork_prefix
+      puts "fork detected. Pulling branch from fork..."
       out = `hub checkout #{branch}`
       return false if out == ''
       branch_name_with_fork_prefix = out.scan(/Branch (.+) set/).flatten.first
@@ -53,6 +55,7 @@ class GitSwitch < Struct.new(:branch)
     end
 
     def handle_source_branch
+      puts "source repository branch detected. Pulling from origin..."
       if branch_name = pull_branch_with_fork_prefix
         handle_branch(substitute_fork_prefix(branch_name)) &&
         delete_branch(branch_name)

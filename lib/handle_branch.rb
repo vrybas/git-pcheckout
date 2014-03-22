@@ -22,18 +22,22 @@ class HandleBranch < Struct.new(:branch)
     end
 
     def checkout_local_branch
+      puts "branch already exists. Checkout..."
       system "git checkout #{branch}"
     end
 
     def pull_from_origin
+      puts "pull from origin..."
       system "git pull origin #{branch}"
     end
 
     def fetch_from_origin
+      puts "no local branch found. Fetching from origin..."
       system "git fetch origin"
     end
 
     def checkout_and_track_branch
+      puts "checkout and track branch..."
       system "git checkout --track origin/#{branch}"
     end
 end

@@ -1,4 +1,4 @@
-require_relative 'lib/handle_branch.rb'
+require_relative 'lib/handle-branch.rb'
 
 class GitPcheckout < Struct.new(:arg)
 

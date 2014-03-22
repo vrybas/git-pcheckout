@@ -25,21 +25,27 @@ class GitSwitch < Struct.new(:branch)
     end
 
     def fork?
-      !(user_name(branch) == user_name(origin_url))
+    user_name_from_branch = user_name_from_pull_request(branch)
+    user_name_from_origin_url = user_name_from_origin(origin_url)
+    user_name_from_branch != user_name_from_origin_url
     end
 
     def pull_branch_with_fork_prefix
-      out = `system("hub checkout #{branch}")`
+      out = `hub checkout #{branch}`
       return false if out == ''
-      branch_name_with_fork_prefix = out.scan(/Branch (.+) set/).flatten
+      branch_name_with_fork_prefix = out.scan(/Branch (.+) set/).flatten.first
     end
 
     def substitute_fork_prefix(branch_name)
-      branch_name.gsub("#{user_name(branch)}-",'')
+      branch_name.gsub("#{user_name_from_pull_request(branch)}-",'')
     end
 
-    def user_name(url)
-      url.scan(/([\w\-_]+\/\w+).git/).flatten.first.split("/").first
+    def user_name_from_origin(url)
+      url.scan(/([\w\-_]+\/[\w\-_]+).git/).flatten.first.split("/").first
+    end
+
+    def user_name_from_pull_request(url)
+    url.scan(/https:\/\/github.com\/([\w\-_]+\/[\w\-_]+)/).flatten.first.split("/").first
     end
 
     def origin_url

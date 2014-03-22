@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+# Usage: git pcheckout [<branch-name>]
+#
+# If local <branch-name> exists:
+#   - git checkout <branch-name>
+#   - git pull origin <branch-name>
+
+# If local <branch-name> not exist:
+#   - git fetch
+#   - git checkout --track origin/<branch-name>
+#
+# If pull request URL specified(from fork):
+#   - pulls fork branch with Hub
+#
+# If pull request URL specified(from source repo):
+#   - git checkout <branch-name>
+#   - git pull origin <branch-name>
+#
+require_relative '../git_pcheckout.rb'
+
+GitPcheckout.(ARGV[0])

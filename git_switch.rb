@@ -41,15 +41,15 @@ class GitSwitch < Struct.new(:arg)
     end
 
     def source_repository_branch?(branch_name)
-      branch_name.start_with?("#{user_name_from_origin(origin_url)}-")
+      branch_name.start_with?("#{origin_user_name}-")
     end
 
     def substitute_prefix(branch_name)
-      branch_name.gsub("#{user_name_from_origin(origin_url)}-",'')
+      branch_name.gsub("#{origin_user_name}-",'')
     end
 
-    def user_name_from_origin(url)
-      url.scan(/([\w\-_]+\/[\w\-_]+).git/).flatten.first.split("/").first
+    def origin_user_name
+      origin_url.scan(/([\w\-_]+)\/[\w\-_]+.git/).flatten[0]
     end
 
     def origin_url

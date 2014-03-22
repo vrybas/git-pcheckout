@@ -1,3 +1,4 @@
+```ruby
 #!/usr/bin/env ruby
 
 # Usage: git pcheckout [<branch-name>]
@@ -19,3 +20,4 @@
 require_relative '../git_pcheckout.rb'
 
 GitPcheckout.(ARGV[0])
+```

@@ -17,16 +17,16 @@ describe GitSwitch do
   end
 
   context "#initialize" do
-    it "should set @branch" do
+    it "should set @arg" do
       instance = GitSwitch.new("foo")
-      expect(instance.branch).to eql("foo")
+      expect(instance.arg).to eql("foo")
     end
   end
 
   context "#call" do
     context "plain branch name" do
       it "should handle plain branch name" do
-        expect_any_instance_of(GitSwitch).to receive("url?").and_return(false)
+        expect_any_instance_of(GitSwitch).to receive("pull_request_url?").and_return(false)
         expect_any_instance_of(HandleBranch).to receive("call").and_return(true)
         GitSwitch.("foo")
       end

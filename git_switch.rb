@@ -1,37 +1,41 @@
 require_relative 'lib/handle_branch.rb'
 
-class GitSwitch < Struct.new(:branch)
+class GitSwitch < Struct.new(:arg)
 
   def self.call(*args)
     new(*args).call
   end
 
-  def initialize(branch)
-    self.branch = branch
+  def initialize(arg)
+    self.arg = arg
   end
 
   def call
-    url? ? handle_pull_request_url : handle_branch(branch)
+    if pull_request_url?(arg)
+      handle_pull_request_url(arg)
+    else
+      handle_branch_name(arg)
+    end
   end
 
   private
 
-    def url?
-      branch.match /https:\/\/github.com\//
+    def pull_request_url?(arg)
+      arg.match /https:\/\/github.com\//
     end
 
-    def handle_pull_request_url
+    def handle_pull_request_url(url)
       puts "handling Pull Request URL..."
 
-      branch_name_with_prefix = get_pull_request_branch
+      branch_name_with_prefix = get_pull_request_branch(url)
 
       if source_repository_branch?(branch_name_with_prefix)
         handle_source_branch(branch_name_with_prefix)
       end
     end
 
-    def get_pull_request_branch
-      out = `hub checkout #{branch}`
+    def get_pull_request_branch(url)
+      out = `hub checkout #{url}`
       return false if out == ''
       out.scan(/Branch (.+) set/).flatten.first
     end
@@ -57,7 +61,7 @@ class GitSwitch < Struct.new(:branch)
     end
 
     def handle_source_branch(branch_name_with_prefix)
-      handle_branch(substitute_prefix(branch_name_with_prefix)) &&
+      handle_branch_name(substitute_prefix(branch_name_with_prefix)) &&
       delete_branch(branch_name_with_prefix)
     end
 
@@ -65,7 +69,7 @@ class GitSwitch < Struct.new(:branch)
       system("git branch -D #{branch_name}")
     end
 
-    def handle_branch(branch)
+    def handle_branch_name(branch)
       HandleBranch.(branch)
     end
 end

@@ -52,10 +52,6 @@ class GitSwitch < Struct.new(:arg)
       url.scan(/([\w\-_]+\/[\w\-_]+).git/).flatten.first.split("/").first
     end
 
-    def user_name_from_pull_request(url)
-    url.scan(/https:\/\/github.com\/([\w\-_]+\/[\w\-_]+)/).flatten.first.split("/").first
-    end
-
     def origin_url
       `git config --get remote.origin.url`
     end

@@ -1,5 +1,4 @@
 require_relative '../git-pcheckout.rb'
-require_relative '../lib/handle-branch.rb'
 
 describe GitPcheckout do
 

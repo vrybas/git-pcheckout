@@ -38,26 +38,22 @@ describe GitSwitch do
         GitSwitch.("https://github.com/user/repo.git")
       end
 
-      context "fork" do
-        it "should pull a fork branch with prefix" do
-          origin_url = "git@github.com/user/repo-name.git"
-          url        = "https://github.com/forked-user/repo-name/pull/18"
-          expect_any_instance_of(GitSwitch).to receive("origin_url").and_return(origin_url)
-          expect_any_instance_of(GitSwitch).to receive("pull_branch_with_fork_prefix").and_return("forked-user-branch_name")
-          GitSwitch.(url)
-        end
+      it "should pull branch with prefix" do
+        origin_url = "git@github.com/user/repo-name.git"
+        url        = "https://github.com/forked-user/repo-name/pull/18"
+        expect_any_instance_of(GitSwitch).to receive("origin_url").and_return(origin_url)
+        expect_any_instance_of(GitSwitch).to receive("get_pull_request_branch").and_return("forked-user-branch_name")
+        GitSwitch.(url)
       end
 
-      context "source repository" do
-        it "should handle a source branch, specified in pull request" do
-          origin_url = "git@github.com/user/repo-name.git"
-          url        = "https://github.com/user/repo-name/pull/18"
-          expect_any_instance_of(GitSwitch).to receive("origin_url").and_return(origin_url)
-          expect_any_instance_of(GitSwitch).to receive("pull_branch_with_fork_prefix").and_return("user-branch_name")
-          expect(HandleBranch).to receive("call").with("branch_name").and_return(true)
-          expect_any_instance_of(GitSwitch).to receive("delete_branch").and_return(true)
-          GitSwitch.(url)
-        end
+      it "should handle a source branch, specified in pull request" do
+        origin_url = "git@github.com/user/repo-name.git"
+        url        = "https://github.com/user/repo-name/pull/18"
+        expect_any_instance_of(GitSwitch).to receive("origin_url").twice.and_return(origin_url)
+        expect_any_instance_of(GitSwitch).to receive("get_pull_request_branch").and_return("user-branch_name")
+        expect(HandleBranch).to receive("call").with("branch_name").and_return(true)
+        expect_any_instance_of(GitSwitch).to receive("delete_branch").and_return(true)
+        GitSwitch.(url)
       end
     end
 

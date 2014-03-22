@@ -17,29 +17,31 @@ class GitSwitch < Struct.new(:branch)
   private
 
     def url?
-      puts "handling Pull Request URL..."
       branch.match /https:\/\/github.com\//
     end
 
     def handle_pull_request_url
-      fork? ? pull_branch_with_fork_prefix : handle_source_branch
+      puts "handling Pull Request URL..."
+
+      branch_name_with_prefix = get_pull_request_branch
+
+      if source_repository_branch?(branch_name_with_prefix)
+        handle_source_branch(branch_name_with_prefix)
+      end
     end
 
-    def fork?
-    user_name_from_branch = user_name_from_pull_request(branch)
-    user_name_from_origin_url = user_name_from_origin(origin_url)
-    user_name_from_branch != user_name_from_origin_url
-    end
-
-    def pull_branch_with_fork_prefix
-      puts "fork detected. Pulling branch from fork..."
+    def get_pull_request_branch
       out = `hub checkout #{branch}`
       return false if out == ''
-      branch_name_with_fork_prefix = out.scan(/Branch (.+) set/).flatten.first
+      out.scan(/Branch (.+) set/).flatten.first
     end
 
-    def substitute_fork_prefix(branch_name)
-      branch_name.gsub("#{user_name_from_pull_request(branch)}-",'')
+    def source_repository_branch?(branch_name)
+      branch_name.start_with?("#{user_name_from_origin(origin_url)}-")
+    end
+
+    def substitute_prefix(branch_name)
+      branch_name.gsub("#{user_name_from_origin(origin_url)}-",'')
     end
 
     def user_name_from_origin(url)
@@ -54,12 +56,9 @@ class GitSwitch < Struct.new(:branch)
       `git config --get remote.origin.url`
     end
 
-    def handle_source_branch
-      puts "source repository branch detected. Pulling from origin..."
-      if branch_name = pull_branch_with_fork_prefix
-        handle_branch(substitute_fork_prefix(branch_name)) &&
-        delete_branch(branch_name)
-      end
+    def handle_source_branch(branch_name_with_prefix)
+      handle_branch(substitute_prefix(branch_name_with_prefix)) &&
+      delete_branch(branch_name_with_prefix)
     end
 
     def delete_branch(branch_name)

@@ -1,6 +1,6 @@
 require_relative 'lib/handle_branch.rb'
 
-class GitSwitch < Struct.new(:arg)
+class GitPcheckout < Struct.new(:arg)
 
   def self.call(*args)
     new(*args).call

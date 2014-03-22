@@ -27,14 +27,14 @@ class GitSwitch < Struct.new(:arg)
     def handle_pull_request_url(url)
       puts "handling Pull Request URL..."
 
-      branch_name_with_prefix = get_pull_request_branch(url)
+      branch_name_with_prefix = checkout_pull_request_branch(url)
 
       if source_repository_branch?(branch_name_with_prefix)
         handle_source_branch(branch_name_with_prefix)
       end
     end
 
-    def get_pull_request_branch(url)
+    def checkout_pull_request_branch(url)
       out = `hub checkout #{url}`
       return false if out == ''
       out.scan(/Branch (.+) set/).flatten.first

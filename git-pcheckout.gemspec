@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Vladimir Rybas"]
   spec.email         = ["vladimirrybas@gmail.com"]
   spec.summary       = %q{Git command to evenly checkout local/remote branches and source/forks pull pequests by URL (with Hub)}
-  spec.description   = %q{...}
+  spec.description   = %q{Git command to evenly checkout local/remote branches and source/forks pull pequests by URL (with Hub)}
   spec.homepage      = "https://github.com/vrybas/git-pcheckout"
   spec.license       = "MIT"
 

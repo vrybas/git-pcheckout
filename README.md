@@ -1,7 +1,7 @@
 # git-pcheckout
 
-Git command to evenly checkout local/remote branches and source/forks
-pull pequests by URL (with Hub)
+Git command to evenly checkout local/remote branches and source/fork
+pull requests by URL (with Hub)
 
 ## Installation
 

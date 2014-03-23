@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = GitPcheckout::VERSION
   spec.authors       = ["Vladimir Rybas"]
   spec.email         = ["vladimirrybas@gmail.com"]
-  spec.summary       = %q{Git command to evenly checkout local/remote branches and source/forks pull pequests by URL (with Hub)}
-  spec.description   = %q{Git command to evenly checkout local/remote branches and source/forks pull pequests by URL (with Hub)}
+  spec.summary       = %q{Git command to evenly checkout local/remote branches and source/fork pull requests by URL (with Hub)}
+  spec.description   = %q{Git command to evenly checkout local/remote branches and source/fork pull requests by URL (with Hub)}
   spec.homepage      = "https://github.com/vrybas/git-pcheckout"
   spec.license       = "MIT"
 

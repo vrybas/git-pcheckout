@@ -74,13 +74,21 @@ class GitPcheckout < Struct.new(:arg)
     end
 
     def dirty_branch?
-      status = `git status -s`.split("\n")
-      return false if status.empty?
+      status_lines = get_status_lines
+      return false if status_lines.empty?
 
-      if status.map(&:lstrip).any? { |line| line.match(/^M|^D|^R/) }
-        puts status
+      if modified_deleted_renamed?(status_lines)
+        puts status_lines
         true
       end
+    end
+
+    def get_status_lines
+      `git status -s`.split("\n").map(&:lstrip)
+    end
+
+    def modified_deleted_renamed?(lines)
+      lines.any? { |line| line.match(/(^M|^D|^R)\s/) }
     end
 
     def errors

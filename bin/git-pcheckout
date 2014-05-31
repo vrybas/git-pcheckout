@@ -16,6 +16,6 @@
 # If pull request URL specified(from source repo):
 #   - treats it as if just a branch name was specified (goto 1)
 
-require_relative '../git-pcheckout.rb'
+require_relative '../lib/git-pcheckout.rb'
 
-GitPcheckout.(ARGV[0])
+GitPcheckout.new(ARGV[0]).perform

@@ -1,4 +1,4 @@
-require 'git-pcheckout/handle_branch'
+require_relative 'git-pcheckout/handle_branch'
 
 class GitPcheckout < Struct.new(:arg)
   def initialize(arg)

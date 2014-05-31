@@ -6,6 +6,8 @@ class GitPcheckout < Struct.new(:arg)
   end
 
   def perform
+    validate_current_branch_state
+
     if pull_request_url?(arg)
       handle_pull_request_url(arg)
     else
@@ -14,6 +16,13 @@ class GitPcheckout < Struct.new(:arg)
   end
 
   private
+
+    def validate_current_branch_state
+      if dirty_branch?
+        puts errors[:dirty_branch]
+        exit(1)
+      end
+    end
 
     def pull_request_url?(arg)
       arg.match /https:\/\/github.com\//
@@ -62,5 +71,27 @@ class GitPcheckout < Struct.new(:arg)
 
     def handle_branch_name(branch)
       HandleBranch.new(branch).perform
+    end
+
+    def dirty_branch?
+      status_lines = get_status_lines
+      return false if status_lines.empty?
+
+      if modified_deleted_renamed?(status_lines)
+        puts status_lines
+        true
+      end
+    end
+
+    def get_status_lines
+      `git status -s`.split("\n").map(&:lstrip)
+    end
+
+    def modified_deleted_renamed?(lines)
+      lines.any? { |line| line.match(/(^M|^D|^R)\s/) }
+    end
+
+    def errors
+      { dirty_branch: "Please, commit your changes or stash them before you can switch branches"}
     end
 end

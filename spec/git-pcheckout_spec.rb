@@ -1,60 +1,60 @@
-require_relative '../git-pcheckout.rb'
+require_relative '../lib/git-pcheckout.rb'
 
 describe GitPcheckout do
+  before do
+    allow_any_instance_of(described_class).to receive(:system).and_return(true)
 
-  context ".call" do
-    it "should delegate to #new() with all params" do
-      expect_any_instance_of(described_class).to receive("call").and_return(true)
-      instance = described_class.("foo")
-      expect(instance).to be
-    end
-
-    it "should send #call() to created instance" do
-      expect_any_instance_of(described_class).to receive("call")
-      described_class.("foo")
-    end
+    handle_branch = double(:handle_branch, perform: 'handle_branch')
+    HandleBranch.stub(:new).and_return(handle_branch)
   end
 
-  context "#initialize" do
-    it "should set @arg" do
-      instance = described_class.new("foo")
-      expect(instance.arg).to eql("foo")
-    end
-  end
+  context '#perofrm' do
+    context 'plain branch name' do
+      it 'handles plain branch name' do
+        instance = described_class.new('foo')
 
-  context "#call" do
-    context "plain branch name" do
-      it "should handle plain branch name" do
-        expect_any_instance_of(described_class).to receive("pull_request_url?").and_return(false)
-        expect_any_instance_of(HandleBranch).to receive("call").and_return(true)
-        described_class.("foo")
+        expect(instance.perform).to eql('handle_branch')
       end
     end
 
-    context "pull request url" do
-      it "should handle pull_request_url" do
-        expect_any_instance_of(described_class).to receive("handle_pull_request_url").and_return(true)
-        described_class.("https://github.com/user/repo.git")
+    context 'pull request URL' do
+      let(:origin_url)       { "git@github.com/#{user_name}/repo-name.git" }
+      let(:pull_request_url) { "https://github.com/#{user_name}/repo-name/pull/18" }
+      let(:branch_name)      { "#{user_name}-branch-name" }
+      let(:instance)         { described_class.new(pull_request_url) }
+
+      before do
+        instance.stub(:origin_url).and_return(origin_url)
+        instance.stub(:checkout_pull_request_branch).and_return(branch_name)
       end
 
-      it "should pull branch with prefix" do
-        origin_url = "git@github.com/user/repo-name.git"
-        url        = "https://github.com/forked-user/repo-name/pull/18"
-        expect_any_instance_of(described_class).to receive("origin_url").and_return(origin_url)
-        expect_any_instance_of(described_class).to receive("checkout_pull_request_branch").and_return("forked-user-branch_name")
-        described_class.(url)
+      context 'when pull request is from the same repo' do
+        let(:user_name) { 'user' }
+
+        it 'gets plain branch name out of pull request' do
+          expect(instance).to receive(:substitute_prefix)
+          instance.perform
+        end
+
+        it 'handles plain branch name' do
+          expect(instance).to receive(:handle_branch_name)
+          instance.perform
+        end
+
+        it 'deletes temporary branch' do
+          expect(instance).to receive(:delete_branch).with(branch_name)
+          instance.perform
+        end
       end
 
-      it "should handle a source branch, specified in pull request" do
-        origin_url = "git@github.com/user/repo-name.git"
-        url        = "https://github.com/user/repo-name/pull/18"
-        expect_any_instance_of(described_class).to receive("origin_url").twice.and_return(origin_url)
-        expect_any_instance_of(described_class).to receive("checkout_pull_request_branch").and_return("user-branch_name")
-        expect(HandleBranch).to receive("call").with("branch_name").and_return(true)
-        expect_any_instance_of(described_class).to receive("delete_branch").and_return(true)
-        described_class.(url)
+      context 'when pull request is from the fork' do
+        let(:user_name) { 'forked-user' }
+
+        it 'creates branch locally with fork prefix' do
+          expect(instance).to receive(:checkout_pull_request_branch)
+          instance.perform
+        end
       end
     end
-
   end
 end

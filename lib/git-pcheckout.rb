@@ -1,16 +1,11 @@
-require_relative 'lib/handle-branch.rb'
+require 'git-pcheckout/handle_branch'
 
 class GitPcheckout < Struct.new(:arg)
-
-  def self.call(*args)
-    new(*args).call
-  end
-
   def initialize(arg)
     self.arg = arg
   end
 
-  def call
+  def perform
     if pull_request_url?(arg)
       handle_pull_request_url(arg)
     else
@@ -25,8 +20,6 @@ class GitPcheckout < Struct.new(:arg)
     end
 
     def handle_pull_request_url(url)
-      puts "handling Pull Request URL..."
-
       branch_name_with_prefix = checkout_pull_request_branch(url)
 
       if source_repository_branch?(branch_name_with_prefix)
@@ -35,6 +28,7 @@ class GitPcheckout < Struct.new(:arg)
     end
 
     def checkout_pull_request_branch(url)
+      puts "handling Pull Request URL..."
       out = `hub checkout #{url}`
       return false if out == ''
       out.scan(/Branch (.+) set/).flatten.first
@@ -57,7 +51,8 @@ class GitPcheckout < Struct.new(:arg)
     end
 
     def handle_source_branch(branch_name_with_prefix)
-      handle_branch_name(substitute_prefix(branch_name_with_prefix)) &&
+      branch_name = substitute_prefix(branch_name_with_prefix)
+      handle_branch_name(branch_name)
       delete_branch(branch_name_with_prefix)
     end
 
@@ -66,6 +61,6 @@ class GitPcheckout < Struct.new(:arg)
     end
 
     def handle_branch_name(branch)
-      HandleBranch.(branch)
+      HandleBranch.new(branch).perform
     end
 end

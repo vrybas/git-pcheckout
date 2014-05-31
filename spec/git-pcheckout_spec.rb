@@ -9,9 +9,16 @@ describe GitPcheckout do
   end
 
   context '#perofrm' do
+    it 'doesn\'t run if current branch is dirty' do
+      instance = described_class.new('foo')
+      instance.stub(:dirty_branch?).and_return(true)
+      expect { instance.perform }.to raise_error(SystemExit)
+    end
+
     context 'plain branch name' do
       it 'handles plain branch name' do
         instance = described_class.new('foo')
+        instance.stub(:dirty_branch?).and_return(false)
 
         expect(instance.perform).to eql('handle_branch')
       end
@@ -24,6 +31,7 @@ describe GitPcheckout do
       let(:instance)         { described_class.new(pull_request_url) }
 
       before do
+        instance.stub(:dirty_branch?).and_return(false)
         instance.stub(:origin_url).and_return(origin_url)
         instance.stub(:checkout_pull_request_branch).and_return(branch_name)
       end

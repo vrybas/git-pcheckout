@@ -1,21 +1,22 @@
 require_relative 'git-pcheckout/handle_branch'
 
-class GitPcheckout < Struct.new(:arg)
-  def initialize(arg)
-    self.arg = arg
-  end
-
-  def perform
-    validate_current_branch_state
-
-    if pull_request_url?(arg)
-      handle_pull_request_url(arg)
-    else
-      handle_branch_name(arg)
+module GitPcheckout
+  class Base < Struct.new(:arg)
+    def initialize(arg)
+      self.arg = arg
     end
-  end
 
-  private
+    def perform
+      validate_current_branch_state
+
+      if pull_request_url?(arg)
+        handle_pull_request_url(arg)
+      else
+        handle_branch_name(arg)
+      end
+    end
+
+    private
 
     def validate_current_branch_state
       if dirty_branch?
@@ -94,4 +95,5 @@ class GitPcheckout < Struct.new(:arg)
     def errors
       { dirty_branch: "Please, commit your changes or stash them before you can switch branches"}
     end
+  end
 end

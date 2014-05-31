@@ -1,4 +1,4 @@
-require_relative '../../lib/git-pcheckout/handle_branch.rb'
+require 'spec_helper'
 
 describe HandleBranch do
   let(:handle_branch) { described_class.new('foo') }

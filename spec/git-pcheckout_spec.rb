@@ -1,6 +1,6 @@
-require_relative '../lib/git-pcheckout.rb'
+require 'spec_helper'
 
-describe GitPcheckout do
+describe GitPcheckout::Base do
   before do
     allow_any_instance_of(described_class).to receive(:system).and_return(true)
 

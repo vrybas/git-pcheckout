@@ -18,4 +18,4 @@
 
 require_relative '../lib/git-pcheckout.rb'
 
-GitPcheckout.new(ARGV[0]).perform
+GitPcheckout::Base.new(ARGV[0]).perform

@@ -17,20 +17,20 @@ pull requests by URL (with Hub)
 
 ## What it does
 
-If specified _branch-name_ exists locally:
+1. If specified _branch-name_ exists locally:
 
     $ git checkout branch-name
     $ git pull origin branch-name
 
-If specified _branch-name_ not exist locally:
+2. If specified _branch-name_ not exist locally:
 
     $ git fetch
     $ git checkout --track origin/branch-name
 
-If pull request URL specified(from fork):
+3. If pull request URL specified(from fork):
   - pulls fork branch with Hub
 
-If pull request URL specified(from source repo):
+4. If pull request URL specified(from source repo):
   - treats it as if just a _branch_name_ was specified (goto 1)
 
 ## Contributing

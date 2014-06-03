@@ -1,9 +1,9 @@
 # git-pcheckout
 
-[![Build Status](https://api.travis-ci.org/vrybas/git-pcheckout.svg)][travis]
+[![Build Status](http://img.shields.io/travis/vrybas/git-pcheckout.svg)][travis]
 [![Gem Version](http://img.shields.io/gem/v/git-pcheckout.svg)][gem]
 [![Code Climate](http://img.shields.io/codeclimate/github/vrybas/git-pcheckout.svg)][codeclimate]
-[![Coverage](https://coveralls.io/repos/vrybas/git-pcheckout/badge.png?branch=master)][coverage]
+[![Coverage](http://img.shields.io/coveralls/vrybas/git-pcheckout/master.svg)][coverage]
 
 Git command to evenly checkout local/remote branches and source/fork
 pull requests by URL (with Hub)

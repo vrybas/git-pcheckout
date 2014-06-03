@@ -3,7 +3,7 @@
 [![Build Status](https://api.travis-ci.org/vrybas/git-pcheckout.svg)][travis]
 [![Gem Version](http://img.shields.io/gem/v/git-pcheckout.svg)][gem]
 [![Code Climate](http://img.shields.io/codeclimate/github/vrybas/git-pcheckout.svg)][codeclimate]
-[![Coverage](https://coveralls.io/repos/vrybas/git-pcheckout/badge.png)][coverage]
+[![Coverage](https://coveralls.io/repos/vrybas/git-pcheckout/badge.png?branch=master)][coverage]
 
 Git command to evenly checkout local/remote branches and source/fork
 pull requests by URL (with Hub)
@@ -50,4 +50,4 @@ pull requests by URL (with Hub)
 [travis]: https://travis-ci.org/vrybas/git-pcheckout
 [gem]: http://rubygems.org/gems/git-pcheckout
 [codeclimate]: https://codeclimate.com/github/vrybas/git-pcheckout
-[coverage]: https://coveralls.io/r/vrybas/git-pcheckout
+[coverage]: https://coveralls.io/r/vrybas/git-pcheckout?branch=master

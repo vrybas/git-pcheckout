@@ -9,12 +9,6 @@ describe GitPcheckout::Base do
   end
 
   context '#perofrm' do
-    it 'doesn\'t run if current branch is dirty' do
-      instance = described_class.new('foo')
-      instance.stub(:dirty_branch?).and_return(true)
-      expect { instance.perform }.to raise_error(SystemExit)
-    end
-
     context 'plain branch name' do
       it 'handles plain branch name' do
         instance = described_class.new('foo')

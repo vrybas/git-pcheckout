@@ -12,6 +12,8 @@ module GitPcheckout
       else
         handle_branch_name(arg)
       end
+    rescue
+      puts 'aborted'
     end
 
     private
